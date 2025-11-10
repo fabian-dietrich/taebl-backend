@@ -6,7 +6,8 @@
     "dev": "nodemon --exec ts-node server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "seed:reservations": "ts-node prisma/seed-reservations.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
