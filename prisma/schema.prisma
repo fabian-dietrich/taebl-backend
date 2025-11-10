@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Table {
+  id           Int           @id @default(autoincrement())
+  tableNumber  String        @unique
+  capacity     Int
+  location     String
+  createdAt    DateTime      @default(now())
+  reservations Reservation[]
+
+  @@map("tables")
+}
+
+model Reservation {
+  id              Int      @id @default(autoincrement())
+  customerName    String
+  customerPhone   String
+  numberOfGuests  Int
+  date            String
+  timeSlot        String
+  duration        Int      @default(120)
+  specialRequests String?
+  status          String   @default("Booked")
+  tableId         Int
+  table           Table    @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+
+  @@map("reservations")
+}
