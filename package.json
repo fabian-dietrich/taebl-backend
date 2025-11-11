@@ -9,7 +9,7 @@
     "seed": "ts-node prisma/seed.ts",
     "seed:reservations": "ts-node prisma/seed-reservations.ts",
     "db:seed": "ts-node prisma/seed.ts && ts-node prisma/seed-reservations.ts",
-    "postinstall": "prisma generate && prisma migrate deploy && npm run db:seed"
+    "postinstall": "prisma generate && prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
