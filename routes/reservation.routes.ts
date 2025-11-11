@@ -3,51 +3,48 @@ import prisma from "../db/prisma";
 
 const router = Router();
 
-// GET /api/reservations - Get all reservations
+// GET all reservations
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { date } = req.query;
-    
-    // Filter by date if provided
+
+    // filter by date if provided
     const reservations = await prisma.reservation.findMany({
       where: date ? { date: date as string } : {},
       include: {
-        table: true
+        table: true,
       },
-      orderBy: [
-        { date: 'asc' },
-        { timeSlot: 'asc' }
-      ]
+      orderBy: [{ date: "asc" }, { timeSlot: "asc" }],
     });
-    
+
     res.json(reservations);
   } catch (error) {
     next(error);
   }
 });
 
-// GET /api/reservations/:id - Get single reservation
+// GET single reservation
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const reservation = await prisma.reservation.findUnique({
       where: { id: parseInt(id) },
       include: {
-        table: true
-      }
+        table: true,
+      },
     });
-    
+
     if (!reservation) {
       return res.status(404).json({ message: "Reservation not found" });
     }
-    
+
     res.json(reservation);
   } catch (error) {
     next(error);
   }
 });
 
-// POST /api/reservations - Create new reservation
+// POST new reservation
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {
@@ -58,49 +55,57 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       timeSlot,
       duration = 120,
       specialRequests,
-      tableId
+      tableId,
     } = req.body;
-    
-    // Validation
-    if (!customerName || !customerPhone || !numberOfGuests || !date || !timeSlot || !tableId) {
-      return res.status(400).json({ 
-        message: "Missing required fields: customerName, customerPhone, numberOfGuests, date, timeSlot, tableId" 
+
+    //validation
+    if (
+      !customerName ||
+      !customerPhone ||
+      !numberOfGuests ||
+      !date ||
+      !timeSlot ||
+      !tableId
+    ) {
+      return res.status(400).json({
+        message:
+          "Missing required fields: customerName, customerPhone, numberOfGuests, date, timeSlot, tableId",
       });
     }
-    
-    // Check if table exists
+
+    // check if table exists
     const table = await prisma.table.findUnique({
-      where: { id: tableId }
+      where: { id: tableId },
     });
-    
+
     if (!table) {
       return res.status(404).json({ message: "Table not found" });
     }
-    
-    // Check if table capacity is sufficient
+
+    // check if table capacity is sufficient
     if (numberOfGuests > table.capacity) {
-      return res.status(400).json({ 
-        message: `Table ${table.tableNumber} has capacity ${table.capacity} but reservation is for ${numberOfGuests} guests` 
+      return res.status(400).json({
+        message: `Table ${table.tableNumber} has capacity ${table.capacity} but reservation is for ${numberOfGuests} guests`,
       });
     }
-    
-    // Check for conflicts (same table, date, overlapping time)
+
+    // check for conflicts (same table, date, overlapping time)
     const existingReservations = await prisma.reservation.findMany({
       where: {
         tableId,
         date,
         timeSlot,
-        status: "Booked"
-      }
+        status: "Booked",
+      },
     });
-    
+
     if (existingReservations.length > 0) {
-      return res.status(409).json({ 
-        message: "This time slot is already booked for this table" 
+      return res.status(409).json({
+        message: "This time slot is already booked for this table",
       });
     }
-    
-    // Create reservation
+
+    // create reservation
     const reservation = await prisma.reservation.create({
       data: {
         customerName,
@@ -110,20 +115,20 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         timeSlot,
         duration,
         specialRequests,
-        tableId
+        tableId,
       },
       include: {
-        table: true
-      }
+        table: true,
+      },
     });
-    
+
     res.status(201).json(reservation);
   } catch (error) {
     next(error);
   }
 });
 
-// PUT /api/reservations/:id - Update reservation
+// PUT / update reservation
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
@@ -135,19 +140,19 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
       timeSlot,
       duration,
       specialRequests,
-      status
+      status,
     } = req.body;
-    
-    // Check if reservation exists
+
+    // check if reservation exists
     const existing = await prisma.reservation.findUnique({
-      where: { id: parseInt(id) }
+      where: { id: parseInt(id) },
     });
-    
+
     if (!existing) {
       return res.status(404).json({ message: "Reservation not found" });
     }
-    
-    // Update reservation
+
+    // update reservation
     const reservation = await prisma.reservation.update({
       where: { id: parseInt(id) },
       data: {
@@ -158,42 +163,45 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
         ...(timeSlot && { timeSlot }),
         ...(duration && { duration }),
         ...(specialRequests !== undefined && { specialRequests }),
-        ...(status && { status })
+        ...(status && { status }),
       },
       include: {
-        table: true
-      }
+        table: true,
+      },
     });
-    
+
     res.json(reservation);
   } catch (error) {
     next(error);
   }
 });
 
-// DELETE /api/reservations/:id - Delete/Cancel reservation
-router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { id } = req.params;
-    
-    // Check if reservation exists
-    const existing = await prisma.reservation.findUnique({
-      where: { id: parseInt(id) }
-    });
-    
-    if (!existing) {
-      return res.status(404).json({ message: "Reservation not found" });
+// DELETE / cancel reservation
+router.delete(
+  "/:id",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+
+      // check if reservation exists
+      const existing = await prisma.reservation.findUnique({
+        where: { id: parseInt(id) },
+      });
+
+      if (!existing) {
+        return res.status(404).json({ message: "Reservation not found" });
+      }
+
+      // delete reservation
+      await prisma.reservation.delete({
+        where: { id: parseInt(id) },
+      });
+
+      res.json({ message: "Reservation deleted successfully" });
+    } catch (error) {
+      next(error);
     }
-    
-    // Delete reservation
-    await prisma.reservation.delete({
-      where: { id: parseInt(id) }
-    });
-    
-    res.json({ message: "Reservation deleted successfully" });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 export default router;

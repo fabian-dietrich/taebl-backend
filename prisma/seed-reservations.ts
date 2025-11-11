@@ -31,13 +31,13 @@ async function main() {
       tableId: 5,
     },
     {
-      customerName: "Daniel",
+      customerName: "Mat",
       customerPhone: "+1234567892",
       numberOfGuests: 6,
       date: today,
       timeSlot: "19:00",
       duration: 120,
-      specialRequests: "will be jetlagged",
+      specialRequests: null,
       tableId: 11,
     },
     {

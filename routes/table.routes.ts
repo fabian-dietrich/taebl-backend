@@ -3,7 +3,7 @@ import prisma from "../db/prisma";
 
 const router = Router();
 
-// GET /api/tables - Get all tables
+// GET all tables
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tables = await prisma.table.findMany({
@@ -59,7 +59,7 @@ router.get("/available", async (req: Request, res: Response, next: NextFunction)
   }
 });
 
-// GET /api/tables/:id - Get single table
+// GET single table
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;

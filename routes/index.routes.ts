@@ -4,7 +4,6 @@ import reservationRoutes from "./reservation.routes";
 
 const router = Router();
 
-// Health check route
 router.get("/", (req: Request, res: Response, next: NextFunction) => {
   res.json({
     message: "TAEBL API - All systems operational",
@@ -15,7 +14,6 @@ router.get("/", (req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-// Mount route modules
 router.use("/tables", tableRoutes);
 router.use("/reservations", reservationRoutes);
 
