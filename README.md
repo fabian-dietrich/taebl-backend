@@ -13,12 +13,10 @@ A REST API for managing restaurant table reservations built with Express.js, Typ
 
 ## Features
 
-- ✅ Full CRUD operations for reservations
-- ✅ Table availability checking
-- ✅ Booking conflict prevention
-- ✅ Capacity validation
-- ✅ 12 pre-configured restaurant tables
-- ✅ Simplified date system (today/tomorrow)
+- Full CRUD operations for reservations model
+- GET only operations for tables
+- 12 pre-configured restaurant tables
+- Simplified date system (today/tomorrow)
 
 ## API Endpoints
 
@@ -37,6 +35,7 @@ A REST API for managing restaurant table reservations built with Express.js, Typ
 - `DELETE /api/reservations/:id` - Delete reservation
 
 ### Create Reservation Body
+
 ```json
 {
   "customerName": "John Doe",
@@ -53,12 +52,14 @@ A REST API for managing restaurant table reservations built with Express.js, Typ
 ## Database Schema
 
 ### Table Model
+
 - `id` - Auto-increment primary key
 - `tableNumber` - Unique table identifier (1-12)
 - `capacity` - Number of seats (2, 4, or 6)
 - `location` - Window, Center, or Patio
 
 ### Reservation Model
+
 - `id` - Auto-increment primary key
 - `customerName` - Guest name
 - `customerPhone` - Contact number
@@ -71,6 +72,7 @@ A REST API for managing restaurant table reservations built with Express.js, Typ
 - `tableId` - Foreign key to Table
 
 ## Development
+
 ```bash
 # Start dev server with hot reload
 npm run dev
@@ -86,6 +88,7 @@ npx prisma studio
 ```
 
 ## Project Structure
+
 ```
 taebl-backend/
 ├── prisma/
