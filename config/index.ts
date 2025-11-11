@@ -3,15 +3,23 @@ import logger from "morgan";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-const FRONTEND_URL = process.env.ORIGIN || "http://localhost:3000";
+const FRONTEND_URL = process.env.ORIGIN || "http://localhost:5173";
 
 // Middleware configuration
 export default (app: Application): void => {
   app.set("trust proxy", 1);
 
+  // Allow multiple origins for development and production
+  const allowedOrigins = [
+    FRONTEND_URL,
+    "http://localhost:5173",  // Vite default port
+    "http://localhost:3000",  // React default port (backup)
+  ];
+
   app.use(
     cors({
-      origin: [FRONTEND_URL]
+      origin: allowedOrigins,
+      credentials: true
     })
   );
 
