@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon --exec ts-node server.ts",
-    "build": "tsc && cp -r ./src/generated dist/generated",
+    "build": "tsc && cp -r ./generated dist/generated",
     "start": "node dist/server.js",
     "seed": "ts-node prisma/seed.ts",
     "seed:reservations": "ts-node prisma/seed-reservations.ts",
