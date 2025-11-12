@@ -20,11 +20,11 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 // GET /api/tables/available - MUST BE BEFORE /:id route!
 router.get("/available", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { date, timeSlot, guests } = req.query;
+    const { day, timeSlot, guests } = req.query;
     
-    if (!date || !timeSlot || !guests) {
+    if (!day || !timeSlot || !guests) {
       return res.status(400).json({ 
-        message: "Missing required query parameters: date, timeSlot, guests" 
+        message: "Missing required query parameters: day, timeSlot, guests" 
       });
     }
     
@@ -39,7 +39,7 @@ router.get("/available", async (req: Request, res: Response, next: NextFunction)
       include: {
         reservations: {
           where: {
-            date: date as string,
+            day: day as string,
             timeSlot: timeSlot as string,
             status: "Booked"
           }

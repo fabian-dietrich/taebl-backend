@@ -5,16 +5,13 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Seeding sample reservations...");
 
-  const today = "2025-11-09"; // Hardcoded "today"
-  const tomorrow = "2025-11-10"; // Hardcoded "tomorrow"
-
   const sampleReservations = [
     // Today - some reservations
     {
       customerName: "Ragnar",
       customerPhone: "+1234567890",
       numberOfGuests: 2,
-      date: today,
+      day: "today",
       timeSlot: "17:00",
       duration: 120,
       specialRequests: null,
@@ -24,7 +21,7 @@ async function main() {
       customerName: "Joshua",
       customerPhone: "+1234567891",
       numberOfGuests: 4,
-      date: today,
+      day: "today",
       timeSlot: "18:00",
       duration: 120,
       specialRequests: "will only eat pizzas with pineapples on them",
@@ -34,7 +31,7 @@ async function main() {
       customerName: "Mat",
       customerPhone: "+1234567892",
       numberOfGuests: 6,
-      date: today,
+      day: "today",
       timeSlot: "19:00",
       duration: 120,
       specialRequests: null,
@@ -44,7 +41,7 @@ async function main() {
       customerName: "Claire",
       customerPhone: "+1234567893",
       numberOfGuests: 4,
-      date: today,
+      day: "today",
       timeSlot: "19:30",
       duration: 120,
       specialRequests: null,
@@ -55,7 +52,7 @@ async function main() {
       customerName: "Kelechi",
       customerPhone: "+1234567894",
       numberOfGuests: 2,
-      date: tomorrow,
+      day: "tomorrow",
       timeSlot: "18:00",
       duration: 120,
       specialRequests: null,
@@ -65,7 +62,7 @@ async function main() {
       customerName: "Yangqing",
       customerPhone: "+1234567895",
       numberOfGuests: 4,
-      date: tomorrow,
+      day: "tomorrow",
       timeSlot: "20:00",
       duration: 120,
       specialRequests: null,
@@ -78,7 +75,7 @@ async function main() {
       data: reservation,
     });
     console.log(
-      `reated reservation for ${reservation.customerName} on ${reservation.date} at ${reservation.timeSlot}`
+      `Created reservation for ${reservation.customerName} on ${reservation.day} at ${reservation.timeSlot}`
     );
   }
 

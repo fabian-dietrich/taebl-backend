@@ -6,15 +6,15 @@ const router = Router();
 // GET all reservations
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { date } = req.query;
+    const { day } = req.query;
 
-    // filter by date if provided
+    // filter by day if provided
     const reservations = await prisma.reservation.findMany({
-      where: date ? { date: date as string } : {},
+      where: day ? { day: day as string } : {},
       include: {
         table: true,
       },
-      orderBy: [{ date: "asc" }, { timeSlot: "asc" }],
+      orderBy: [{ day: "asc" }, { timeSlot: "asc" }],
     });
 
     res.json(reservations);
@@ -51,7 +51,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       customerName,
       customerPhone,
       numberOfGuests,
-      date,
+      day,
       timeSlot,
       duration = 120,
       specialRequests,
@@ -63,13 +63,13 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       !customerName ||
       !customerPhone ||
       !numberOfGuests ||
-      !date ||
+      !day ||
       !timeSlot ||
       !tableId
     ) {
       return res.status(400).json({
         message:
-          "Missing required fields: customerName, customerPhone, numberOfGuests, date, timeSlot, tableId",
+          "Missing required fields: customerName, customerPhone, numberOfGuests, day, timeSlot, tableId",
       });
     }
 
@@ -89,11 +89,11 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    // check for conflicts (same table, date, overlapping time)
+    // check for conflicts (same table, day, overlapping time)
     const existingReservations = await prisma.reservation.findMany({
       where: {
         tableId,
-        date,
+        day,
         timeSlot,
         status: "Booked",
       },
@@ -111,7 +111,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
         customerName,
         customerPhone,
         numberOfGuests,
-        date,
+        day,
         timeSlot,
         duration,
         specialRequests,
@@ -136,7 +136,7 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
       customerName,
       customerPhone,
       numberOfGuests,
-      date,
+      day,
       timeSlot,
       duration,
       specialRequests,
@@ -159,7 +159,7 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
         ...(customerName && { customerName }),
         ...(customerPhone && { customerPhone }),
         ...(numberOfGuests && { numberOfGuests }),
-        ...(date && { date }),
+        ...(day && { day }),
         ...(timeSlot && { timeSlot }),
         ...(duration && { duration }),
         ...(specialRequests !== undefined && { specialRequests }),

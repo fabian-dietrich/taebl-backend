@@ -23,7 +23,7 @@ model Reservation {
   customerName    String
   customerPhone   String
   numberOfGuests  Int
-  date            String
+  day             String   // "today" or "tomorrow"
   timeSlot        String
   duration        Int      @default(120)
   specialRequests String?
