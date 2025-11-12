@@ -6,7 +6,7 @@ async function main() {
   console.log("Seeding sample reservations...");
 
   const sampleReservations = [
-    // Today - some reservations
+    // today
     {
       customerName: "Ragnar",
       customerPhone: "+1234567890",
@@ -47,7 +47,7 @@ async function main() {
       specialRequests: null,
       tableId: 7,
     },
-    // Tomorrow - fewer reservations
+// tomorrow
     {
       customerName: "Kelechi",
       customerPhone: "+1234567894",

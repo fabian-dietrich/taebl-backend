@@ -8,7 +8,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { day } = req.query;
 
-    // filter by day if provided
+    // filter by day
     const reservations = await prisma.reservation.findMany({
       where: day ? { day: day as string } : {},
       include: {
@@ -58,7 +58,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
       tableId,
     } = req.body;
 
-    //validation
+    //validate
     if (
       !customerName ||
       !customerPhone ||
