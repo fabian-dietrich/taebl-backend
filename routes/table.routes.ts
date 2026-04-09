@@ -62,7 +62,7 @@ router.get("/available", async (req: Request, res: Response, next: NextFunction)
 // GET single table
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const table = await prisma.table.findUnique({
       where: { id: parseInt(id) },
       include: {

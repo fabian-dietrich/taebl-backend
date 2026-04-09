@@ -26,7 +26,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 // GET single reservation
 router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const reservation = await prisma.reservation.findUnique({
       where: { id: parseInt(id) },
       include: {
@@ -131,7 +131,7 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 // PUT / update reservation
 router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const {
       customerName,
       customerPhone,
@@ -181,7 +181,7 @@ router.delete(
   "/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id } = req.params;
+      const id = req.params.id as string;
 
       // check if reservation exists
       const existing = await prisma.reservation.findUnique({
