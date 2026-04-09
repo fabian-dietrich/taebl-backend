@@ -18,8 +18,11 @@ Thumbs.db:encryptable
 ehthumbs.db
 *.lnk
 
-
 # VS Code
 .vscode/*
 
+# Prisma generated
 /generated/prisma
+
+# npm lockfile (using bun)
+package-lock.json

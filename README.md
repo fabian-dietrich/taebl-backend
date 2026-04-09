@@ -1,47 +1,41 @@
-# TAEBL Backend - Restaurant Table Booking API
+# Taebl — Backend
 
-A REST API for managing restaurant table reservations built with Express.js, TypeScript, Prisma, and PostgreSQL.
+REST API for [Taebl](https://taebl.fabiandietri.ch), a restaurant reservation management interface. Serves table and reservation data for a 12-table restaurant with half-hour booking slots.
 
-## Tech Stack
+**Frontend repo:** [taebl-frontend](https://github.com/fabian-dietrich/taebl-frontend)
 
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Language:** TypeScript
-- **Database:** PostgreSQL
-- **ORM:** Prisma
-- **Dev Tools:** Nodemon, ts-node
+## Live demo
 
-## Features
+[taebl.fabiandietri.ch](https://taebl.fabiandietri.ch)
 
-- Full CRUD operations for reservations model
-- GET only operations for tables
-- 12 pre-configured restaurant tables
-- Simplified date system (today/tomorrow)
+> The live site runs in **demo mode** — the frontend loads seed data from the API on page load, then handles all create/edit/delete operations client-side. No write requests reach the backend from the demo.
 
-## API Endpoints
+## Tech stack
 
-### Tables
+Node.js, Express 5, TypeScript, Prisma, PostgreSQL.
 
-- `GET /api/tables` - Get all tables
-- `GET /api/tables/:id` - Get table by ID with reservations
-- `GET /api/tables/available?date=YYYY-MM-DD&timeSlot=HH:MM&guests=N` - Get available tables
+## API endpoints
 
-### Reservations
+**Tables** (`/api/tables`)
+- `GET /` — list all tables, sorted by table number
+- `GET /:id` — single table with its reservations
+- `GET /available?day=today&timeSlot=19:00&guests=4` — tables with sufficient capacity and no booking conflict
 
-- `GET /api/reservations` - Get all reservations (optional: `?date=YYYY-MM-DD`)
-- `GET /api/reservations/:id` - Get reservation by ID
-- `POST /api/reservations` - Create new reservation
-- `PUT /api/reservations/:id` - Update reservation
-- `DELETE /api/reservations/:id` - Delete reservation
+**Reservations** (`/api/reservations`)
+- `GET /` — list all reservations (optional filter: `?day=today`)
+- `GET /:id` — single reservation with table details
+- `POST /` — create reservation (validates capacity, checks conflicts)
+- `PUT /:id` — update reservation fields
+- `DELETE /:id` — delete reservation
 
-### Create Reservation Body
+### Create/update reservation body
 
 ```json
 {
-  "customerName": "John Doe",
+  "customerName": "Jesse Pinkman",
   "customerPhone": "+1234567890",
   "numberOfGuests": 4,
-  "date": "2025-11-09",
+  "day": "today",
   "timeSlot": "19:00",
   "duration": 120,
   "specialRequests": "Window seat preferred",
@@ -49,45 +43,29 @@ A REST API for managing restaurant table reservations built with Express.js, Typ
 }
 ```
 
-## Database Schema
+## Data model
 
-### Table Model
+**Table** — 12 pre-seeded tables with capacity (2, 4, or 6 seats) and location (Window, Center, or Patio).
 
-- `id` - Auto-increment primary key
-- `tableNumber` - Unique table identifier (1-12)
-- `capacity` - Number of seats (2, 4, or 6)
-- `location` - Window, Center, or Patio
+**Reservation** — linked to a table via foreign key. Uses a simplified day system (`today`/`tomorrow`) with half-hour time slots from 17:00 to 22:30. Duration defaults to 120 minutes. Status is `Booked` by default.
 
-### Reservation Model
+## Local setup
 
-- `id` - Auto-increment primary key
-- `customerName` - Guest name
-- `customerPhone` - Contact number
-- `numberOfGuests` - Party size
-- `date` - Reservation date (YYYY-MM-DD)
-- `timeSlot` - Time slot (HH:MM format, 30-min intervals)
-- `duration` - Length in minutes (default: 120)
-- `specialRequests` - Optional notes
-- `status` - "Booked" or "Cancelled"
-- `tableId` - Foreign key to Table
-
-## Development
-
-```bash
-# Start dev server with hot reload
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# View database in browser
-npx prisma studio
+```
+bun install
+cp .env.example .env   # set DATABASE_URL to a PostgreSQL connection string
+bun run dev             # starts on port 5005 with watch mode
 ```
 
-## Project Structure
+### Seeding
+
+```
+bun run seed              # creates 12 tables
+bun run seed:reservations # adds 6 sample reservations
+bun run db:seed           # runs both
+```
+
+## Project structure
 
 ```
 taebl-backend/
@@ -108,7 +86,3 @@ taebl-backend/
 ├── app.ts
 └── server.ts
 ```
-
-## Author
-
-Fabian Dietrich - Ironhack Bootcamp WDFT Sept 2025

@@ -3,13 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon --exec ts-node server.ts",
-    "build": "tsc",
+    "dev": "bun --watch server.ts",
+    "build": "prisma generate && prisma migrate deploy && tsc",
     "start": "node dist/server.js",
-    "seed": "ts-node prisma/seed.ts",
-    "seed:reservations": "ts-node prisma/seed-reservations.ts",
-    "db:seed": "ts-node prisma/seed.ts && ts-node prisma/seed-reservations.ts",
-    "postinstall": "prisma generate && prisma migrate deploy"
+    "seed": "bun prisma/seed.ts",
+    "seed:reservations": "bun prisma/seed-reservations.ts",
+    "db:seed": "bun prisma/seed.ts && bun prisma/seed-reservations.ts",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -25,12 +25,10 @@
     "@types/express": "^5.0.0",
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.10.2",
-    "nodemon": "^3.1.10",
     "prisma": "^5.22.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts && ts-node prisma/seed-reservations.ts"
+    "seed": "bun prisma/seed.ts && bun prisma/seed-reservations.ts"
   }
 }
